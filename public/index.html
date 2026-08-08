@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة تحكم البوت</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0f0d16;
+      --card-bg: #1a1528;
+      --input-bg: #262038;
+      --accent-purple: #6c5ce7;
+      --green-btn: #27ae60;
+      --red-btn: #c0392b;
+      --text-main: #ffffff;
+      --text-muted: #a0a0a0;
+      --border-color: #383050;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .header {
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 5px;
+    }
+
+    .btn-main-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.95rem;
+      transition: 0.2s;
+    }
+
+    .btn:hover { opacity: 0.9; }
+    .btn-green { background-color: var(--green-btn); }
+    .btn-red { background-color: var(--red-btn); }
+    .btn-purple { background-color: var(--accent-purple); }
+
+    .status-card {
+      background-color: var(--card-bg);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      border: 1px solid var(--border-color);
+      font-size: 0.95rem;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border-radius: 10px;
+      padding: 12px;
+      border: 1px solid var(--border-color);
+    }
+
+    .card-title {
+      font-size: 0.9rem;
+      color: #a29bfe;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+      background: var(--input-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: white;
+      box-sizing: border-box;
+      font-size: 0.85rem;
+    }
+
+    input::placeholder { color: var(--text-muted); }
+
+    .btn-action-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .btn-small {
+      padding: 6px;
+      font-size: 0.8rem;
+      border-radius: 5px;
+    }
+
+    .music-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .list-box {
+      background: var(--input-bg);
+      border-radius: 6px;
+      padding: 8px;
+      max-height: 120px;
+      overflow-y: auto;
+      font-size: 0.8rem;
+      margin-top: 8px;
+    }
+
+    .list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .list-item:last-child { border-bottom: none; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- الهيدر -->
+    <div class="header">
+      <i class="fa-solid fa-robot" style="color: #a29bfe;"></i>
+      <span>لوحة تحكم البوت</span>
+    </div>
+
+    <!-- أزرار التحكم الرئيسية -->
+    <div class="btn-main-group">
+      <button class="btn btn-green" onclick="toggleBot('start')">
+        <i class="fa-solid fa-play"></i> تشغيل البوت
+      </button>
+      <button class="btn btn-red" onclick="toggleBot('stop')">
+        <i class="fa-solid fa-square"></i> إيقاف البوت
+      </button>
+    </div>
+
+    <!-- حالة البوت -->
+    <div class="status-card">
+      حالة البوت :- <span id="botStatus" style="color: var(--red-btn); font-weight: bold;">موقف 🔴</span>
+    </div>
+
+    <!-- بطاقات البيانات -->
+    <div class="card-grid">
+      <!-- بيانات البوت -->
+      <div class="card">
+        <div class="card-title"><i class="fa-solid fa-robot"></i> بيانات البوت</div>
+        <input type="text" id="botUser" placeholder="اسم المستخدم">
+        <input type="password" id="botPass" placeholder="كلمة المرور">
+        <input type="text" id="botRoom" placeholder="كود الروم">
+        <div class="btn-action-group">
+          <button class="btn btn-purple btn-small" onclick="saveData('bot')"><i class="fa-solid fa-floppy-disk"></i> حفظ</button>
+          <button class="btn btn-red btn-small" onclick="clearInputs('bot')"><i class="fa-solid fa-trash"></i> حذف</button>
+        </div>
+      </div>
+
+      <!-- بيانات الزائر -->
+      <div class="card">
+        <div class="card-title"><i class="fa-solid fa-user"></i> بيانات الزائر</div>
+        <input type="text" id="guestUser" placeholder="اسم الزائر">
+        <input type="text" id="guestRoom" placeholder="كود الروم">
+        <div style="height: 35px;"></div>
+        <div class="btn-action-group">
+          <button class="btn btn-purple btn-small" onclick="saveData('guest')"><i class="fa-solid fa-floppy-disk"></i> حفظ</button>
+          <button class="btn btn-red btn-small" onclick="clearInputs('guest')"><i class="fa-solid fa-trash"></i> حذف</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- قسم الموسيقى -->
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-music"></i> الموسيقى</div>
+      <input type="text" id="ytUrl" placeholder="رابط اليوتيوب (..........)">
+      <div class="music-grid">
+        <button class="btn btn-purple btn-small"><i class="fa-solid fa-forward-step"></i> تخطي</button>
+        <button class="btn btn-red btn-small"><i class="fa-solid fa-square"></i> إيقاف</button>
+        <button class="btn btn-green btn-small"><i class="fa-solid fa-play"></i> تشغيل</button>
+      </div>
+      <div class="music-grid" style="margin-top: 6px;">
+        <button class="btn btn-purple btn-small"><i class="fa-solid fa-volume-high"></i> رفع الصوت</button>
+        <button class="btn btn-purple btn-small"><i class="fa-solid fa-volume-low"></i> خفض الصوت</button>
+        <button class="btn btn-purple btn-small"><i class="fa-solid fa-list-check"></i> الطابور</button>
+      </div>
+    </div>
+
+    <!-- قسم الرومات -->
+    <div class="card">
+      <div class="card-title"><i class="fa-solid fa-magnifying-glass"></i> الرومات</div>
+      <input type="text" placeholder="البحث عن روم...">
+      <div class="btn-action-group">
+        <button class="btn btn-purple btn-small"><i class="fa-solid fa-list"></i> عرض الرومات</button>
+        <button class="btn btn-purple btn-small"><i class="fa-solid fa-right-to-bracket"></i> دخول روم</button>
+      </div>
+    </div>
+
+    <!-- الأغاني المفضلة والفائتة -->
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-title"><i class="fa-solid fa-star"></i> أغاني المفضلة</div>
+        <div class="list-box">
+          <div class="list-item"><span>أغنية هادئة</span> <i class="fa-solid fa-trash" style="color:var(--red-btn); cursor:pointer;"></i></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><i class="fa-solid fa-clock-rotate-left"></i> الأغاني الفائتة</div>
+        <div class="list-box">
+          <div class="list-item"><span>أغنية حماسية</span> <i class="fa-solid fa-star" style="color:gold; cursor:pointer;"></i></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function toggleBot(action) {
+      const statusElement = document.getElementById('botStatus');
+      if (action === 'start') {
+        statusElement.innerHTML = 'يشتغل 🟢';
+        statusElement.style.color = 'var(--green-btn)';
+      } else {
+        statusElement.innerHTML = 'موقف 🔴';
+        statusElement.style.color = 'var(--red-btn)';
+      }
+      await fetch('/api/bot/' + action, { method: 'POST' });
+    }
+
+    async function saveData(type) {
+      const payload = type === 'bot' ? {
+        user: document.getElementById('botUser').value,
+        pass: document.getElementById('botPass').value,
+        room: document.getElementById('botRoom').value
+      } : {
+        user: document.getElementById('guestUser').value,
+        room: document.getElementById('guestRoom').value
+      };
+
+      await fetch('/api/save-bot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      alert('تم حفظ البيانات بنجاح');
+    }
+
+    function clearInputs(type) {
+      if (type === 'bot') {
+        document.getElementById('botUser').value = '';
+        document.getElementById('botPass').value = '';
+        document.getElementById('botRoom').value = '';
+      } else {
+        document.getElementById('guestUser').value = '';
+        document.getElementById('guestRoom').value = '';
+      }
+    }
+  </script>
+</body>
+</html>
+
