@@ -1,20 +1,9 @@
 FROM node:18-slim
-
-# تثبيت متصفح Chromium والمكتبات الصوتية اللازمة
-RUN apt-get update && apt-get install -y \
-    chromium \
-    ffmpeg \
-    fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 \
-    --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/*
-
+RUN apt-get update && apt-get install -y chromium ffmpeg && rm -rf /var/lib/apt/lists/*
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
-
 WORKDIR /usr/src/app
-COPY package*.json ./
-RUN npm install
 COPY . .
-
+RUN npm install
 EXPOSE 3000
 CMD [ "npm", "start" ]
